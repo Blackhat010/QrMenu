@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Button, Group } from "@mantine/core";
 
 const LanguageSwitcher = ({ onLanguageChange }: { onLanguageChange: (lang: string) => void }) => {
-    const [language, setLanguage] = useState("en");
+    const [language, setLanguage] = useState("ar");
 
     const handleLanguageChange = (lang: string) => {
         setLanguage(lang);

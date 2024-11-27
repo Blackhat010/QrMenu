@@ -73,6 +73,7 @@ model MenuItem {
     name_ar     String
     description String
     price       String
+    sizes       Json
     position    Int
     category    Category? @relation("MenuItemsOfCategory", fields: [categoryId], references: [id])
     categoryId  String?

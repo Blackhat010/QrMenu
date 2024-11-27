@@ -1,7 +1,8 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import type { Image, MenuItem, Prisma } from "@prisma/client";
+import type { Image, MenuItem } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 
 import { env } from "src/env/server.mjs";
 import { createTRPCRouter, protectedProcedure } from "src/server/api/trpc";
@@ -34,6 +35,7 @@ export const menuItemRouter = createTRPCRouter({
             name_ar: input.name_ar,
             position: lastMenuItem ? lastMenuItem.position + 1 : 0,
             price: input.price,
+            sizes: input.sizes ? JSON.stringify(input.sizes) : Prisma.JsonNull,
             userId: ctx.session.user.id,
         };
 
@@ -88,6 +90,7 @@ export const menuItemRouter = createTRPCRouter({
             name: input.name,
             name_ar: input.name_ar,
             price: input.price,
+            sizes: input.sizes ? JSON.stringify(input.sizes) : null,
         };
 
         const promiseList = [];

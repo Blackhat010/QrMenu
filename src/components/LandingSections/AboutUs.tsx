@@ -24,7 +24,7 @@ export const AboutUs: FC = () => {
                         <Title className={classes.sectionTitle}>{t("title")}</Title>
                         <Text mb="sm" size="xl">
                             {t("subtitle.line1")}
-                            <Link href="https://github.com/kaje94/menufic" target="_blank">
+                            <Link href="https://github.com/Blackhat010/QrMenu/" target="_blank">
                                 {t("subtitle.line2")}
                             </Link>
                             {t("subtitle.line3")}
@@ -39,7 +39,7 @@ export const AboutUs: FC = () => {
                         <Text color={theme.black} mb="sm" opacity={0.6}>
                             {t("appreciation")}
                         </Text>
-                        <Link className={classes.githubLink} href="https://github.com/kaje94/menufic" target="_blank">
+                        <Link className={classes.githubLink} href="https://github.com/Blackhat010/QrMenu/" target="_blank">
                             <IconBrandGithub size={30} />
                             <Text>{t("githubButtonLabel")}</Text>
                         </Link>

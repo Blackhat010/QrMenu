@@ -1,10 +1,7 @@
 import type { FC } from "react";
 import { useMemo, useState } from "react";
-
 import { Box, createStyles, Paper, Stack, Text } from "@mantine/core";
-
 import type { Image, MenuItem } from "@prisma/client";
-
 import { ViewMenuItemModal } from "./ViewMenuItemModal";
 import { ImageKitImage } from "../ImageKitImage";
 
@@ -27,32 +24,30 @@ const useStyles = createStyles((theme, { imageColor }: StyleProps, getRef) => {
 
     return {
         cardDescWrap: { flex: 1, gap: 0, overflow: "hidden", padding: theme.spacing.lg },
-        cardImage: { height: 150, ref: image, transition: "transform 500ms ease", width: 150 },
-        cardImageWrap: {
-            borderRadius: theme.radius.lg,
-            height: 150,
-            overflow: "hidden",
-            position: "relative",
-            width: 150,
-        },
         cardItem: {
-            "&:hover": {
-                backgroundColor:
-                    theme.colorScheme === "light" ? theme.fn.darken(bgColor, 0.05) : theme.fn.lighten(bgColor, 0.05),
-                boxShadow: theme.shadows.xs,
-            },
             backgroundColor: bgColor,
-            border: `1px solid ${theme.colors.dark[3]}`,
-            color: theme.colors.dark[8],
+            borderRadius: theme.radius.md,
+            boxShadow: theme.shadows.sm,
             cursor: "pointer",
             display: "flex",
+            flexDirection: "column",
             overflow: "hidden",
-            padding: "0 !important",
-            transition: "all 500ms ease",
-            [`&:hover .${image}`]: { transform: "scale(1.05)" },
+            position: "relative",
+            transition: "box-shadow 150ms ease, transform 150ms ease",
+            "&:hover": {
+                boxShadow: theme.shadows.md,
+                transform: "scale(1.02)",
+            },
         },
-        cardItemDesc: { WebkitLineClamp: 3 },
-        cardItemTitle: { WebkitLineClamp: 1 },
+        cardImageWrap: {
+            position: "relative",
+            width: "100%",
+        },
+        cardImage: {
+            height: 150,
+            objectFit: "cover",
+            width: "100%",
+        },
         cardText: {
             WebkitBoxOrient: "vertical",
             color: theme.black,
@@ -61,11 +56,12 @@ const useStyles = createStyles((theme, { imageColor }: StyleProps, getRef) => {
             textOverflow: "ellipsis",
             whiteSpace: "normal",
         },
+        cardItemTitle: { WebkitLineClamp: 1 },
+        cardItemDesc: { WebkitLineClamp: 3 },
     };
 });
 
 interface Props {
-    /** Menu item to be displayed in the card */
     item: MenuItem & { image: Image | null };
     language: string;
 }
@@ -74,6 +70,8 @@ interface Props {
 export const MenuItemCard: FC<Props> = ({ item, language }) => {
     const { classes, cx } = useStyles({ imageColor: item?.image?.color });
     const [modalVisible, setModalVisible] = useState(false);
+    const sizes = item.sizes ? JSON.parse(item.sizes as string) : [];
+
     return (
         <>
             <Paper
@@ -101,9 +99,20 @@ export const MenuItemCard: FC<Props> = ({ item, language }) => {
                     <Text className={cx(classes.cardText, classes.cardItemTitle)} size="lg" weight={700}>
                         {language === "en" ? item.name : item.name_ar || item.name}
                     </Text>
-                    <Text color="red" size="sm">
-                        {item.price}
-                    </Text>
+                    {item.price && (
+                        <Text color="red" size="sm">
+                            {item.price}
+                        </Text>
+                    )}
+                    {sizes.length > 0 && (
+                        <Text color="red" size="sm">
+                            {sizes.map((size: { size: string; price: string }, index: number) => (
+                                <span key={index}>
+                                    {size.size}: {size.price} {index < sizes.length - 1 && ", "}
+                                </span>
+                            ))}
+                        </Text>
+                    )}
                     <Text className={cx(classes.cardText, classes.cardItemDesc)} opacity={0.7} size="xs">
                         {item.description}
                     </Text>

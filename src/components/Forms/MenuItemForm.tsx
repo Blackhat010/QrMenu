@@ -62,6 +62,11 @@ export const MenuItemForm: FC<Props> = ({ opened, onClose, menuId, menuItem, cat
         },
     });
 
+    interface Size {
+        price: string;
+        size: string;
+    }
+
     const { getInputProps, onSubmit, setValues, isDirty, resetDirty, values } = useForm({
         initialValues: {
             description: menuItem?.description || "",
@@ -70,6 +75,7 @@ export const MenuItemForm: FC<Props> = ({ opened, onClose, menuId, menuItem, cat
             name: menuItem?.name || "",
             name_ar: menuItem?.name_ar || "",
             price: menuItem?.price || "",
+            sizes: typeof menuItem?.sizes === "string" ? JSON.parse(menuItem.sizes) : [] as Size[],
         },
         validate: zodResolver(menuItemInput),
     });
@@ -83,6 +89,7 @@ export const MenuItemForm: FC<Props> = ({ opened, onClose, menuId, menuItem, cat
                 name: menuItem?.name || "",
                 name_ar: menuItem?.name_ar || "",
                 price: menuItem?.price || "",
+                sizes: typeof menuItem?.sizes === "string" ? JSON.parse(menuItem.sizes) : [],
             };
             setValues(newValues);
             resetDirty(newValues);
@@ -91,6 +98,28 @@ export const MenuItemForm: FC<Props> = ({ opened, onClose, menuId, menuItem, cat
 
     const loading = isCreating || isUpdating;
 
+    const handleAddSize = () => {
+        setValues((prevValues) => ({
+            ...prevValues,
+            sizes: [...prevValues.sizes, { price: "", size: "" }],
+        }));
+    };
+
+    const handleSizeChange = (index: number, field: string, value: string) => {
+        setValues((prevValues) => {
+            const newSizes = [...prevValues.sizes];
+            newSizes[index] = { ...newSizes[index], [field]: value };
+            return { ...prevValues, sizes: newSizes };
+        });
+    };
+
+    const handleRemoveSize = (index: number) => {
+        setValues((prevValues) => {
+            const newSizes = [...prevValues.sizes];
+            newSizes.splice(index, 1);
+            return { ...prevValues, sizes: newSizes };
+        });
+    };
     return (
         <Modal
             loading={loading}
@@ -152,6 +181,30 @@ export const MenuItemForm: FC<Props> = ({ opened, onClose, menuId, menuItem, cat
                         onImageDeleteClick={() => setValues({ imageBase64: "", imagePath: "" })}
                         width={400}
                     />
+                     <Button onClick={handleAddSize} variant="outline">
+                        {t("addSizeButtonLabel")}
+                    </Button>
+                    {values.sizes.map((size: Size, index: number) => (
+                        <Group key={index} mt="sm">
+                            <TextInput
+                                label={t("inputSizeLabel")}
+                                placeholder={t("inputSizePlaceholder")}
+                                value={size.size}
+                                onChange={(event) => handleSizeChange(index, "size", event.currentTarget.value)}
+                                withAsterisk
+                            />
+                            <TextInput
+                                label={t("inputSizePriceLabel")}
+                                placeholder={t("inputSizePricePlaceholder")}
+                                value={size.price}
+                                onChange={(event) => handleSizeChange(index, "price", event.currentTarget.value)}
+                                withAsterisk
+                            />
+                            <Button color="red" onClick={() => handleRemoveSize(index)} variant="outline">
+                                {t("removeSizeButtonLabel")}
+                            </Button>
+                        </Group>
+                    ))}
                     <Group mt="md" position="right">
                         <Button data-testid="save-menu-item-form" loading={loading} px="xl" type="submit">
                             {tCommon("save")}

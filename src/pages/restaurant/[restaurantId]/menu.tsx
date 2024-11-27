@@ -38,7 +38,7 @@ const RestaurantMenuPage: NextPage = () => {
                     restaurant?.contactNo
                         ? t("seoDescription.restaurantContactNo", { contactNo: restaurant?.contactNo })
                         : ""
-                } ${t("seoDescription.menufic")}`}
+                } ${t("seoDescription.Qr_Menu")}`}
                 openGraph={{
                     images: [{ url: `${env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT}/${restaurant?.image?.path}` }],
                     type: "restaurant.menu",
