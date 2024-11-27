@@ -90,7 +90,7 @@ export const menuItemRouter = createTRPCRouter({
             name: input.name,
             name_ar: input.name_ar,
             price: input.price,
-            sizes: input.sizes ? (input.sizes as Prisma.InputJsonValue) : Prisma.JsonNull,
+            sizes: input.sizes ? (input.sizes as Prisma.JsonValue) : Prisma.JsonNull,
 
         };
 
