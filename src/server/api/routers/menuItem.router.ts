@@ -31,6 +31,7 @@ export const menuItemRouter = createTRPCRouter({
             category: { connect: { id_userId: { id: input.categoryId, userId: ctx.session.user.id } } },
             description: input.description,
             name: input.name,
+            name_ar: input.name_ar,
             position: lastMenuItem ? lastMenuItem.position + 1 : 0,
             price: input.price,
             userId: ctx.session.user.id,
@@ -52,7 +53,6 @@ export const menuItemRouter = createTRPCRouter({
                 },
             };
         }
-
         return ctx.prisma.menuItem.create({ data: createData, include: { image: true } });
     }),
 
@@ -83,7 +83,12 @@ export const menuItemRouter = createTRPCRouter({
             where: { id_userId: { id: input.id, userId: ctx.session.user.id } },
         });
 
-        const updateData: Partial<MenuItem> = { description: input.description, name: input.name, price: input.price };
+        const updateData: Partial<MenuItem> = {
+            description: input.description,
+            name: input.name,
+            name_ar: input.name_ar,
+            price: input.price,
+        };
 
         const promiseList = [];
         const transactions: (Prisma.Prisma__ImageClient<Image> | Prisma.Prisma__MenuItemClient<MenuItem>)[] = [];

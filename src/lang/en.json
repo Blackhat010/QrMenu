@@ -224,7 +224,9 @@
                 "updateError": "Failed to update menu",
                 "updateSuccessDesc": "Updated details of ${data.name} menu successfully",
                 "inputNameLabel": "Name",
+                "inputNameLabelArabic": "Name in  Arabic",
                 "inputNamePlaceholder": "Menu Name",
+                "inputNamePlaceholderArabic": "Menu Name in Arabic",
                 "inputTimeLabel": "Available Time",
                 "inputTimePlaceholder": "10.00 AM - 9.00 PM"
             },
@@ -243,7 +245,9 @@
                 "updateError": "Failed to update category",
                 "updateSuccessDesc": "Updated details of {name} category successfully",
                 "inputNameLabel": "Name",
-                "inputNamePlaceholder": "Category Name"
+                "inputNameLabelArabic": "Name in  Arabic",
+                "inputNamePlaceholder": "Category Name",
+                "inputNamePlaceholderArabic": "Category Name in Arabic"
             },
             "menuItem": {
                 "positionUpdateError": "Failed to update menu item position",
@@ -261,7 +265,9 @@
                 "updateError": "Failed to update menu item",
                 "updateSuccessDesc": "Updated details of {name} category successfully",
                 "inputNameLabel": "Name",
+                "inputNameLabelArabic": "Name in  Arabic",
                 "inputNamePlaceholder": "Item Name",
+                "inputNamePlaceholderArabic": "Item Name in  Arabic",
                 "inputPriceLabel": "Price",
                 "inputPricePlaceholder": "$10.00",
                 "inputDescriptionLabel": "Description"
@@ -281,7 +287,9 @@
             "updateError": "Failed to update restaurant",
             "updateSuccessDesc": "Created restaurant {name}, successfully",
             "inputNameLabel": "Name",
+            "inputNameLabelArabic": "Name in  Arabic",
             "inputNamePlaceholder": "Restaurant Name",
+            "inputNamePlaceholderArabic": "Restaurant Name in Arabic",
             "inputLocationLabel": "Location",
             "inputLocationPlaceholder": "No 05, Road Name, City",
             "inputContactNoLabel": "Contact Number",

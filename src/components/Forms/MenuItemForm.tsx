@@ -37,7 +37,10 @@ export const MenuItemForm: FC<Props> = ({ opened, onClose, menuId, menuItem, cat
             trpcCtx.category.getAll.setData({ menuId }, (categories) =>
                 categories?.map((item) => (item.id === categoryId ? { ...item, items: [...item.items, data] } : item))
             );
-            showSuccessToast(tCommon("createSuccess"), t("createSuccessDesc", { name: data.name }));
+            showSuccessToast(
+                tCommon("createSuccess"),
+                t("createSuccessDesc", { name: data.name, name_ar: data.name_ar })
+            );
         },
     });
 
@@ -65,6 +68,7 @@ export const MenuItemForm: FC<Props> = ({ opened, onClose, menuId, menuItem, cat
             imageBase64: "",
             imagePath: menuItem?.image?.path || "",
             name: menuItem?.name || "",
+            name_ar: menuItem?.name_ar || "",
             price: menuItem?.price || "",
         },
         validate: zodResolver(menuItemInput),
@@ -77,6 +81,7 @@ export const MenuItemForm: FC<Props> = ({ opened, onClose, menuId, menuItem, cat
                 imageBase64: "",
                 imagePath: menuItem?.image?.path || "",
                 name: menuItem?.name || "",
+                name_ar: menuItem?.name_ar || "",
                 price: menuItem?.price || "",
             };
             setValues(newValues);
@@ -96,6 +101,7 @@ export const MenuItemForm: FC<Props> = ({ opened, onClose, menuId, menuItem, cat
         >
             <form
                 onSubmit={onSubmit((formValues) => {
+                    console.log("Form Values:", formValues);
                     if (isDirty()) {
                         if (menuItem) {
                             updateMenuItem({ ...formValues, id: menuItem?.id });
@@ -114,6 +120,14 @@ export const MenuItemForm: FC<Props> = ({ opened, onClose, menuId, menuItem, cat
                         placeholder={t("inputNamePlaceholder")}
                         withAsterisk
                         {...getInputProps("name")}
+                        autoFocus
+                    />
+                    <TextInput
+                        disabled={loading}
+                        label={t("inputNameLabelArabic")} // Add label for Arabic name
+                        placeholder={t("inputNamePlaceholderArabic")} // Add placeholder for Arabic name
+                        withAsterisk
+                        {...getInputProps("name_ar")} // Add input for Arabic name
                         autoFocus
                     />
                     <TextInput
