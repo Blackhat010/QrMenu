@@ -115,7 +115,7 @@ interface Props {
 
 /** Component to display all the menus and banners of the restaurant */
 export const RestaurantMenu: FC<Props> = ({ restaurant }) => {
-    const [language, setLanguage] = useState("en");
+    const [language, setLanguage] = useState("ar");
     const handleLanguageChange = (lang: string) => {
         setLanguage(lang);
     };

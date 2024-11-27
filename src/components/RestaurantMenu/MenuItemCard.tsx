@@ -104,11 +104,11 @@ export const MenuItemCard: FC<Props> = ({ item, language }) => {
                             {item.price}
                         </Text>
                     )}
-                    {sizes.length > 0 && (
+                {sizes.length > 0 && (
                         <Text color="red" size="sm">
-                            {sizes.map((size: { size: string; price: string }, index: number) => (
-                                <span key={index}>
-                                    {size.size}: {size.price} {index < sizes.length - 1 && ", "}
+                            {sizes.map((size: { size: string; price: string }) => (
+                                <span key={`${size.size}-${size.price}`}>
+                                    {size.size}: {size.price}
                                 </span>
                             ))}
                         </Text>

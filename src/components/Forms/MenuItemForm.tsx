@@ -130,7 +130,7 @@ export const MenuItemForm: FC<Props> = ({ opened, onClose, menuId, menuItem, cat
         >
             <form
                 onSubmit={onSubmit((formValues) => {
-                    console.log("Form Values:", formValues);
+                 //   console.log("Form Values:", formValues);
                     if (isDirty()) {
                         if (menuItem) {
                             updateMenuItem({ ...formValues, id: menuItem?.id });
@@ -185,7 +185,7 @@ export const MenuItemForm: FC<Props> = ({ opened, onClose, menuId, menuItem, cat
                         {t("addSizeButtonLabel")}
                     </Button>
                     {values.sizes.map((size: Size, index: number) => (
-                        <Group key={index} mt="sm">
+                    <Group key={`${size.size}-${size.price}`} mt="sm">
                             <TextInput
                                 label={t("inputSizeLabel")}
                                 placeholder={t("inputSizePlaceholder")}
