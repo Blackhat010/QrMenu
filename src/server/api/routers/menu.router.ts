@@ -31,7 +31,7 @@ export const menuRouter = createTRPCRouter({
             data: {
                 availableTime: input.availableTime,
                 name: input.name,
-                name_ar: input.name_ar,
+                // name_ar: input.name_ar,
                 position: lastMenuItem ? lastMenuItem.position + 1 : 0,
                 restaurantId: input.restaurantId,
                 userId: ctx.session.user.id,
