@@ -7,6 +7,7 @@ export const id = z.object({ id: z.string().cuid() });
 
 export const categoryInput = z.object({
     name: z.string().trim().min(1, "Name is required").max(30, "Name cannot be longer than 30 characters"),
+    name_ar: z.string().trim().min(1, "Arabic Name is required").max(30, "Name cannot be longer than 30 characters"),
 });
 export const menuInput = z.object({
     availableTime: z.string().trim().max(20, "Available time cannot be longer than 20 characters"),

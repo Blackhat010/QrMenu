@@ -16,5 +16,9 @@
         "testid",
         "TRPC",
         "UPSTASH"
-    ]
+    ],
+    "[typescriptreact]": {
+        "editor.defaultFormatter": "vscode.typescript-language-features"
+    }
+    
 }

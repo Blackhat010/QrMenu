@@ -21,6 +21,7 @@ import { useTranslations } from "next-intl";
 
 import type { Category, Image, Menu, MenuItem, Restaurant } from "@prisma/client";
 
+import LanguageSwitcher from "src/components/LanguageSwitcher";
 import { Black, White } from "src/styles/theme";
 
 import { MenuItemCard } from "./MenuItemCard";
@@ -114,6 +115,10 @@ interface Props {
 
 /** Component to display all the menus and banners of the restaurant */
 export const RestaurantMenu: FC<Props> = ({ restaurant }) => {
+    const [language, setLanguage] = useState("en");
+    const handleLanguageChange = (lang: string) => {
+        setLanguage(lang);
+    };
     const { classes, theme } = useStyles();
     const bannerCarousalRef = useRef(Autoplay({ delay: 5000 }));
     const { colorScheme, toggleColorScheme } = useMantineColorScheme();
@@ -171,6 +176,7 @@ export const RestaurantMenu: FC<Props> = ({ restaurant }) => {
                     <Box className={classes.carousalTitle}>
                         <Text className={classes.carousalTitleText}>{restaurant?.name}</Text>
                         <Box className={classes.carousalSubWrap}>
+                            <LanguageSwitcher onLanguageChange={handleLanguageChange} />
                             <Flex align="center" gap={10}>
                                 <IconMapPin />
                                 <a
@@ -229,7 +235,7 @@ export const RestaurantMenu: FC<Props> = ({ restaurant }) => {
                     {restaurant?.menus?.map((menu) => (
                         <Tabs.Tab key={menu.id} px="lg" value={menu.id}>
                             <Text color={theme.black} size="lg" weight={selectedMenu === menu.id ? "bold" : "normal"}>
-                                {menu.name}
+                                {language === "en" ? menu.name : menu.name}
                             </Text>
                             <Text color={theme.colors.dark[8]} opacity={selectedMenu === menu.id ? 1 : 0.5} size="xs">
                                 {menu.availableTime}
@@ -244,7 +250,7 @@ export const RestaurantMenu: FC<Props> = ({ restaurant }) => {
                     ?.map((category) => (
                         <Box key={category.id}>
                             <Text my="lg" size="lg" weight={600}>
-                                {category.name}
+                                {language === "en" ? category.name : category.name_ar}
                             </Text>
                             <SimpleGrid
                                 breakpoints={[
@@ -255,7 +261,7 @@ export const RestaurantMenu: FC<Props> = ({ restaurant }) => {
                                 mb={30}
                             >
                                 {category.items?.map((item) => (
-                                    <MenuItemCard key={item.id} item={item} />
+                                    <MenuItemCard key={item.id} item={item} language={language} />
                                 ))}
                             </SimpleGrid>
                         </Box>

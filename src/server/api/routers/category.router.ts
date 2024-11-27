@@ -31,6 +31,7 @@ export const categoryRouter = createTRPCRouter({
             data: {
                 menuId: input.menuId,
                 name: input.name,
+                name_ar: input.name_ar,
                 position: lastCategoryItem ? lastCategoryItem.position + 1 : 0,
                 userId: ctx.session.user.id,
             },
@@ -82,7 +83,7 @@ export const categoryRouter = createTRPCRouter({
     /** Update the details of a menu category */
     update: protectedProcedure.input(categoryInput.merge(id)).mutation(async ({ ctx, input }) => {
         return ctx.prisma.category.update({
-            data: { name: input.name },
+            data: { name: input.name, name_ar: input.name_ar },
             where: { id_userId: { id: input.id, userId: ctx.session.user.id } },
         });
     }),

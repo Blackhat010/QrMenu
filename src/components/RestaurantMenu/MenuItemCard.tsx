@@ -67,10 +67,11 @@ const useStyles = createStyles((theme, { imageColor }: StyleProps, getRef) => {
 interface Props {
     /** Menu item to be displayed in the card */
     item: MenuItem & { image: Image | null };
+    language: string;
 }
 
 /** Display each menu item as a card in the full restaurant menu */
-export const MenuItemCard: FC<Props> = ({ item }) => {
+export const MenuItemCard: FC<Props> = ({ item, language }) => {
     const { classes, cx } = useStyles({ imageColor: item?.image?.color });
     const [modalVisible, setModalVisible] = useState(false);
     return (
@@ -98,7 +99,7 @@ export const MenuItemCard: FC<Props> = ({ item }) => {
 
                 <Stack className={classes.cardDescWrap}>
                     <Text className={cx(classes.cardText, classes.cardItemTitle)} size="lg" weight={700}>
-                        {item.name}
+                        {language === "en" ? item.name : item.name_ar || item.name}
                     </Text>
                     <Text color="red" size="sm">
                         {item.price}

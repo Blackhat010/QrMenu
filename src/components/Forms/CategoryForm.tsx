@@ -33,11 +33,17 @@ export const CategoryForm: FC<Props> = ({ opened, onClose, menuId, categoryItem,
         onError: (err) => showErrorToast(t("createError"), err),
         onSuccess: (data) => {
             onClose();
-            trpcCtx.category.getAll.setData({ menuId }, (categories) => [...(categories || []), data]);
+            trpcCtx.category.getAll.setData({ menuId }, (categories) => [
+                ...(categories || []),
+                { ...data, items: [] },
+            ]);
             if (onAddSuccess) {
                 onAddSuccess(data);
             }
-            showSuccessToast(tCommon("createSuccess"), t("createSuccessDesc", { name: data.name }));
+            showSuccessToast(
+                tCommon("createSuccess"),
+                t("createSuccessDesc", { name: data.name, name_ar: data.name_ar })
+            );
         },
     });
 
@@ -48,18 +54,21 @@ export const CategoryForm: FC<Props> = ({ opened, onClose, menuId, categoryItem,
             trpcCtx.category.getAll.setData({ menuId }, (categories) =>
                 categories?.map((item) => (item.id === data.id ? { ...item, ...data } : item))
             );
-            showSuccessToast(tCommon("updateSuccess"), t("updateSuccessDesc", { name: data.name }));
+            showSuccessToast(
+                tCommon("updateSuccess"),
+                t("updateSuccessDesc", { name: data.name, name_ar: data.name_ar })
+            );
         },
     });
 
     const { getInputProps, onSubmit, isDirty, resetDirty, setValues } = useForm({
-        initialValues: { name: categoryItem?.name || "" },
+        initialValues: { name: categoryItem?.name || "", name_ar: categoryItem?.name_ar || "" },
         validate: zodResolver(categoryInput),
     });
 
     useEffect(() => {
         if (opened) {
-            const values = { name: categoryItem?.name || "" };
+            const values = { name: categoryItem?.name || "", name_ar: categoryItem?.name_ar || "" };
             setValues(values);
             resetDirty(values);
         }
@@ -79,9 +88,9 @@ export const CategoryForm: FC<Props> = ({ opened, onClose, menuId, categoryItem,
                 onSubmit={onSubmit((values) => {
                     if (isDirty()) {
                         if (categoryItem) {
-                            updateCategory({ ...values, id: categoryItem?.id });
+                            updateCategory({ ...values, id: categoryItem?.id, name_ar: values.name_ar });
                         } else {
-                            createCategory({ ...values, menuId });
+                            createCategory({ ...values, menuId, name_ar: values.name_ar });
                         }
                     } else {
                         onClose();
@@ -95,6 +104,13 @@ export const CategoryForm: FC<Props> = ({ opened, onClose, menuId, categoryItem,
                         placeholder={t("inputNamePlaceholder")}
                         withAsterisk
                         {...getInputProps("name")}
+                    />
+                    <TextInput
+                        disabled={loading}
+                        label={t("inputNameLabelArabic")}
+                        placeholder={t("inputNamePlaceholderArabic")}
+                        withAsterisk
+                        {...getInputProps("name_ar")}
                     />
                     <Group mt="md" position="right">
                         <Button data-testid="save-category-form" loading={loading} px="xl" type="submit">
