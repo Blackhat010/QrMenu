@@ -221,12 +221,17 @@ export const RestaurantMenu: FC<Props> = ({ restaurant }) => {
                         </a>
                     </Flex>
                     {restaurant?.contactNo && (
-                        <Flex align="center" gap={10} opacity={0.6}>
-                            <IconPhone />
-                            <a href={`tel:${restaurant?.contactNo.replace(/\s/g, "")}`}>
-                                <Text className={classes.carousalTitleSubText}>{restaurant?.contactNo}</Text>
-                            </a>
-                        </Flex>
+                        <>
+                            <Flex align="center" gap={10} opacity={0.6}>
+                                <IconPhone />
+                                <a href={`tel:${restaurant?.contactNo.replace(/\s/g, "")}`}>
+                                    <Text className={classes.carousalTitleSubText}>{restaurant?.contactNo}</Text>
+                                </a>
+                            </Flex>
+                            <Flex align="center" gap={10} opacity={1}>
+                                <LanguageSwitcher onLanguageChange={handleLanguageChange} />
+                            </Flex>
+                        </>
                     )}
                 </Stack>
             </MediaQuery>
