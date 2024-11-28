@@ -1,6 +1,6 @@
 import type { FC } from "react";
 import { useMemo, useState } from "react";
-import { Box, createStyles, Paper, Stack, Text } from "@mantine/core";
+import { Box, createStyles, Paper, Stack, Text, Flex } from "@mantine/core";
 import type { Image, MenuItem } from "@prisma/client";
 import { ViewMenuItemModal } from "./ViewMenuItemModal";
 import { ImageKitImage } from "../ImageKitImage";
@@ -41,10 +41,13 @@ const useStyles = createStyles((theme, { imageColor }: StyleProps, getRef) => {
         },
         cardImageWrap: {
             position: "relative",
-            width: "100%",
+            width: 150,
+            height: 150,
+            overflow: "hidden",
+            borderRadius: theme.radius.md,
         },
         cardImage: {
-            height: 150,
+            height: "100%",
             objectFit: "cover",
             width: "100%",
         },
@@ -62,6 +65,7 @@ const useStyles = createStyles((theme, { imageColor }: StyleProps, getRef) => {
 });
 
 interface Props {
+    /** Menu item to be displayed in the card */
     item: MenuItem & { image: Image | null };
     language: string;
 }
@@ -70,19 +74,26 @@ interface Props {
 export const MenuItemCard: FC<Props> = ({ item, language }) => {
     const { classes, cx } = useStyles({ imageColor: item?.image?.color });
     const [modalVisible, setModalVisible] = useState(false);
-    const sizes = item.sizes ? JSON.parse(item.sizes as string) : [];
+    let sizes = [];
+
+    try {
+        sizes = item.sizes ? JSON.parse(item.sizes as string) : [];
+    } catch (error) {
+        console.error("Failed to parse sizes JSON:", error);
+    }
 
     return (
         <>
             <Paper
                 className={classes.cardItem}
                 data-testid="menu-item-card"
-                h={150}
+                h="auto" // Auto height so it expands with content
                 onClick={() => setModalVisible(true)}
             >
-                {item?.image?.path && (
-                    <Box className={classes.cardImageWrap}>
-                        <Box className={classes.cardImage}>
+                <Flex direction="row" gap="md" align="flex-start" justify="space-between" style={{ width: "100%" }}>
+                    {/* Image Section */}
+                    {item?.image?.path && (
+                        <Box className={classes.cardImageWrap}>
                             <ImageKitImage
                                 blurhash={item?.image?.blurHash}
                                 color={item?.image?.color}
@@ -92,31 +103,41 @@ export const MenuItemCard: FC<Props> = ({ item, language }) => {
                                 width={150}
                             />
                         </Box>
-                    </Box>
-                )}
+                    )}
 
-                <Stack className={classes.cardDescWrap}>
-                    <Text className={cx(classes.cardText, classes.cardItemTitle)} size="lg" weight={700}>
-                        {language === "en" ? item.name : item.name_ar || item.name}
-                    </Text>
-                    {item.price && (
-                        <Text color="red" size="sm">
-                            {item.price}
+                    {/* Content Section */}
+                    <Stack className={classes.cardDescWrap} style={{ flex: 1 }}>
+                        <Text className={cx(classes.cardText, classes.cardItemTitle)} size="lg" weight={700}>
+                            {language === "en" ? item.name : item.name_ar || item.name}
                         </Text>
-                    )}
-                {sizes.length > 0 && (
-                        <Text color="red" size="sm">
-                            {sizes.map((size: { size: string; price: string }) => (
-                                <span key={`${size.size}-${size.price}`}>
-                                    {size.size}: {size.price}
-                                </span>
-                            ))}
+
+                        {/* Price & Sizes Section */}
+                        <Flex direction="row" gap="xs" align="center">
+                            {/* Main Price */}
+                            {item.price && (
+                                <Text color="red" size="sm">
+                                    {item.price}
+                                </Text>
+                            )}
+
+                            {/* Sizes and Prices */}
+                            {Array.isArray(sizes) && sizes.length > 0 && (
+                                <Text color="red" size="sm">
+                                    {sizes.map((size: { size: string; price: string }) => (
+                                        <span key={`${size.size}-${size.price}`}>
+                                            {size.size}: {size.price}{" "}
+                                        </span>
+                                    ))}
+                                </Text>
+                            )}
+                        </Flex>
+
+                        {/* Description */}
+                        <Text className={cx(classes.cardText, classes.cardItemDesc)} opacity={0.7} size="xs">
+                            {item.description}
                         </Text>
-                    )}
-                    <Text className={cx(classes.cardText, classes.cardItemDesc)} opacity={0.7} size="xs">
-                        {item.description}
-                    </Text>
-                </Stack>
+                    </Stack>
+                </Flex>
             </Paper>
             <ViewMenuItemModal menuItem={item} onClose={() => setModalVisible(false)} opened={modalVisible} />
         </>

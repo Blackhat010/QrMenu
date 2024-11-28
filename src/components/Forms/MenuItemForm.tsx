@@ -184,21 +184,19 @@ export const MenuItemForm: FC<Props> = ({ opened, onClose, menuId, menuItem, cat
                      <Button onClick={handleAddSize} variant="outline">
                         {t("addSizeButtonLabel")}
                     </Button>
-                    {values.sizes.map((size: Size, index: number) => (
-                    <Group key={`${size.size}-${size.price}`} mt="sm">
+                    {values.sizes.map((_, index: number) => (
+                        <Group key={index} mt="sm">
                             <TextInput
                                 label={t("inputSizeLabel")}
                                 placeholder={t("inputSizePlaceholder")}
-                                value={size.size}
-                                onChange={(event) => handleSizeChange(index, "size", event.currentTarget.value)}
                                 withAsterisk
+                                {...getInputProps(`sizes.${index}.size`)}
                             />
                             <TextInput
                                 label={t("inputSizePriceLabel")}
                                 placeholder={t("inputSizePricePlaceholder")}
-                                value={size.price}
-                                onChange={(event) => handleSizeChange(index, "price", event.currentTarget.value)}
                                 withAsterisk
+                                {...getInputProps(`sizes.${index}.price`)}
                             />
                             <Button color="red" onClick={() => handleRemoveSize(index)} variant="outline">
                                 {t("removeSizeButtonLabel")}
