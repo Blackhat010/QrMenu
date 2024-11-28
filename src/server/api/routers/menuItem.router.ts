@@ -85,14 +85,17 @@ export const menuItemRouter = createTRPCRouter({
             where: { id_userId: { id: input.id, userId: ctx.session.user.id } },
         });
 
-        const updateData: Partial<MenuItem> = {
+        const updateData: Prisma.MenuItemUpdateInput = {
             description: input.description,
             name: input.name,
             name_ar: input.name_ar,
             price: input.price,
+<<<<<<< HEAD
             sizes: input.sizes ? JSON.stringify(input.sizes) : undefined,
+=======
+            sizes: input.sizes ? (input.sizes as Prisma.InputJsonValue) : Prisma.JsonNull,
+>>>>>>> 47451f622e18a39a0ed25d2cd008757ca871f6e4
         };
-
         const promiseList = [];
         const transactions: (Prisma.Prisma__ImageClient<Image> | Prisma.Prisma__MenuItemClient<MenuItem>)[] = [];
 
@@ -108,7 +111,7 @@ export const menuItemRouter = createTRPCRouter({
                 encodeImageToBlurhash(input.imageBase64),
                 getColor(input.imageBase64),
             ]);
-
+    
             transactions.push(
                 ctx.prisma.image.create({
                     data: {
@@ -119,9 +122,10 @@ export const menuItemRouter = createTRPCRouter({
                     },
                 })
             );
-            updateData.imageId = uploadedResponse.fileId;
+            updateData.image = {
+                connect: { id: uploadedResponse.fileId },
+            };
         }
-
         transactions.push(
             ctx.prisma.menuItem.update({
                 data: updateData,
