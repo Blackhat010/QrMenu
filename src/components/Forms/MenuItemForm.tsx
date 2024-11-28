@@ -184,7 +184,7 @@ export const MenuItemForm: FC<Props> = ({ opened, onClose, menuId, menuItem, cat
                      <Button onClick={handleAddSize} variant="outline">
                         {t("addSizeButtonLabel")}
                     </Button>
-                    {values.sizes.map((_, index: number) => (
+                    {values.sizes.map((_: Size, index: number) => (
                         <Group key={index} mt="sm">
                             <TextInput
                                 label={t("inputSizeLabel")}

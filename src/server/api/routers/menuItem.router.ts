@@ -35,7 +35,7 @@ export const menuItemRouter = createTRPCRouter({
             name_ar: input.name_ar,
             position: lastMenuItem ? lastMenuItem.position + 1 : 0,
             price: input.price,
-            sizes: input.sizes ? JSON.stringify(input.sizes) : Prisma.JsonNull,
+            sizes: input.sizes ? (input.sizes as Prisma.InputJsonValue) : Prisma.JsonNull,
             userId: ctx.session.user.id,
         };
 
@@ -90,11 +90,7 @@ export const menuItemRouter = createTRPCRouter({
             name: input.name,
             name_ar: input.name_ar,
             price: input.price,
-<<<<<<< HEAD
-            sizes: input.sizes ? JSON.stringify(input.sizes) : undefined,
-=======
             sizes: input.sizes ? (input.sizes as Prisma.InputJsonValue) : Prisma.JsonNull,
->>>>>>> 47451f622e18a39a0ed25d2cd008757ca871f6e4
         };
         const promiseList = [];
         const transactions: (Prisma.Prisma__ImageClient<Image> | Prisma.Prisma__MenuItemClient<MenuItem>)[] = [];
