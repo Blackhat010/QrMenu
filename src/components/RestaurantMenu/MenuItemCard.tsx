@@ -83,7 +83,7 @@ export const MenuItemCard: FC<Props> = ({ item, language }) => {
                 sizes = [];
             }
         } else if (Array.isArray(item.sizes)) {
-            sizes = item.sizes;
+            sizes = item.sizes.filter((size): size is { id: string; size: string; price: string } => size !== null);
         } else {
             sizes = [];
         }
@@ -92,7 +92,7 @@ export const MenuItemCard: FC<Props> = ({ item, language }) => {
         sizes = [];
     }
     
-  //  console.log("Parsed sizes:", sizes); // Debugging: Log the parsed sizes
+   console.log("Parsed sizes:", sizes); // Debugging: Log the parsed sizes
     
 
     return (
