@@ -55,6 +55,7 @@
         "react-qr-code": "^2.0.11",
         "sharp": "^0.31.3",
         "superjson": "1.9.1",
+        "uuid": "^11.0.3",
         "zod": "^3.20.2"
     },
     "devDependencies": {

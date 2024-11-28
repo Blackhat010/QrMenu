@@ -1,5 +1,6 @@
 import type { FC } from "react";
 import { useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 import { Button, Group, Stack, Textarea, TextInput } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
@@ -63,6 +64,7 @@ export const MenuItemForm: FC<Props> = ({ opened, onClose, menuId, menuItem, cat
     });
 
     interface Size {
+        id: string;
         price: string;
         size: string;
     }
@@ -75,7 +77,7 @@ export const MenuItemForm: FC<Props> = ({ opened, onClose, menuId, menuItem, cat
             name: menuItem?.name || "",
             name_ar: menuItem?.name_ar || "",
             price: menuItem?.price || "",
-            sizes: typeof menuItem?.sizes === "string" ? JSON.parse(menuItem.sizes) : [] as Size[],
+            sizes: typeof menuItem?.sizes === "string" ? JSON.parse(menuItem.sizes).map((size: Size) => ({ ...size, id: uuidv4() })) : [] as Size[],
         },
         validate: zodResolver(menuItemInput),
     });
@@ -89,7 +91,7 @@ export const MenuItemForm: FC<Props> = ({ opened, onClose, menuId, menuItem, cat
                 name: menuItem?.name || "",
                 name_ar: menuItem?.name_ar || "",
                 price: menuItem?.price || "",
-                sizes: typeof menuItem?.sizes === "string" ? JSON.parse(menuItem.sizes) : [],
+                sizes: typeof menuItem?.sizes === "string" ? JSON.parse(menuItem.sizes).map((size: Size) => ({ ...size, id: uuidv4() })) : [],
             };
             setValues(newValues);
             resetDirty(newValues);
@@ -101,7 +103,7 @@ export const MenuItemForm: FC<Props> = ({ opened, onClose, menuId, menuItem, cat
     const handleAddSize = () => {
         setValues((prevValues) => ({
             ...prevValues,
-            sizes: [...prevValues.sizes, { price: "", size: "" }],
+            sizes: [...prevValues.sizes, { id: uuidv4(), price: "", size: "" }],
         }));
     };
 
@@ -115,11 +117,26 @@ export const MenuItemForm: FC<Props> = ({ opened, onClose, menuId, menuItem, cat
 
     const handleRemoveSize = (index: number) => {
         setValues((prevValues) => {
-            const newSizes = [...prevValues.sizes];
-            newSizes.splice(index, 1);
+            const newSizes = prevValues.sizes.filter((_: any, i: number) => i !== index);
             return { ...prevValues, sizes: newSizes };
         });
     };
+
+    const handleFormSubmit = (formValues: any) => {
+        const adjustedValues = {
+            ...formValues,
+            price: formValues.price || null,
+        };
+
+        if (menuItem) {
+            updateMenuItem({ ...adjustedValues, id: menuItem?.id });
+        } else if (categoryId) {
+            createMenuItem({ ...adjustedValues, categoryId, menuId });
+        } else {
+            onClose();
+        }
+    };
+
     return (
         <Modal
             loading={loading}
@@ -128,20 +145,7 @@ export const MenuItemForm: FC<Props> = ({ opened, onClose, menuId, menuItem, cat
             title={menuItem ? t("updateModalTitle") : t("createModalTitle")}
             {...rest}
         >
-            <form
-                onSubmit={onSubmit((formValues) => {
-                 //   console.log("Form Values:", formValues);
-                    if (isDirty()) {
-                        if (menuItem) {
-                            updateMenuItem({ ...formValues, id: menuItem?.id });
-                        } else if (categoryId) {
-                            createMenuItem({ ...formValues, categoryId, menuId });
-                        }
-                    } else {
-                        onClose();
-                    }
-                })}
-            >
+            <form onSubmit={onSubmit(handleFormSubmit)}>
                 <Stack spacing="sm">
                     <TextInput
                         disabled={loading}
@@ -153,17 +157,15 @@ export const MenuItemForm: FC<Props> = ({ opened, onClose, menuId, menuItem, cat
                     />
                     <TextInput
                         disabled={loading}
-                        label={t("inputNameLabelArabic")} // Add label for Arabic name
-                        placeholder={t("inputNamePlaceholderArabic")} // Add placeholder for Arabic name
+                        label={t("inputNameLabelArabic")}
+                        placeholder={t("inputNamePlaceholderArabic")}
                         withAsterisk
-                        {...getInputProps("name_ar")} // Add input for Arabic name
-                        autoFocus
+                        {...getInputProps("name_ar")}
                     />
                     <TextInput
                         disabled={loading}
                         label={t("inputPriceLabel")}
                         placeholder={t("inputPricePlaceholder")}
-                        withAsterisk
                         {...getInputProps("price")}
                     />
                     <Textarea
@@ -181,22 +183,26 @@ export const MenuItemForm: FC<Props> = ({ opened, onClose, menuId, menuItem, cat
                         onImageDeleteClick={() => setValues({ imageBase64: "", imagePath: "" })}
                         width={400}
                     />
-                     <Button onClick={handleAddSize} variant="outline">
+                    <Button onClick={handleAddSize} variant="outline">
                         {t("addSizeButtonLabel")}
                     </Button>
-                    {values.sizes.map((_: Size, index: number) => (
-                        <Group key={index} mt="sm">
+                    {values.sizes.map((size: Size, index: number) => (
+                        <Group key={size.id} mt="sm">
                             <TextInput
+                                disabled={loading}
                                 label={t("inputSizeLabel")}
+                                onChange={(event) => handleSizeChange(index, "size", event.currentTarget.value)}
                                 placeholder={t("inputSizePlaceholder")}
+                                value={size.size}
                                 withAsterisk
-                                {...getInputProps(`sizes.${index}.size`)}
                             />
                             <TextInput
+                                disabled={loading}
                                 label={t("inputSizePriceLabel")}
+                                onChange={(event) => handleSizeChange(index, "price", event.currentTarget.value)}
                                 placeholder={t("inputSizePricePlaceholder")}
+                                value={size.price}
                                 withAsterisk
-                                {...getInputProps(`sizes.${index}.price`)}
                             />
                             <Button color="red" onClick={() => handleRemoveSize(index)} variant="outline">
                                 {t("removeSizeButtonLabel")}
