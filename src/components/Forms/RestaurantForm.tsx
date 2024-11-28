@@ -55,6 +55,7 @@ export const RestaurantForm: FC<Props> = ({ opened, onClose, restaurant, ...rest
             imagePath: restaurant?.image?.path || "",
             location: restaurant?.location || "",
             name: restaurant?.name || "",
+            
         },
         validate: zodResolver(restaurantInput),
     });

@@ -74,13 +74,26 @@ interface Props {
 export const MenuItemCard: FC<Props> = ({ item, language }) => {
     const { classes, cx } = useStyles({ imageColor: item?.image?.color });
     const [modalVisible, setModalVisible] = useState(false);
-    let sizes = [];
+    let sizes: { id: string; size: string; price: string }[] = [];
 
     try {
-        sizes = item.sizes ? JSON.parse(item.sizes as string) : [];
+        if (typeof item.sizes === "string") {
+            sizes = JSON.parse(item.sizes);
+            if (!Array.isArray(sizes)) {
+                sizes = [];
+            }
+        } else if (Array.isArray(item.sizes)) {
+            sizes = item.sizes;
+        } else {
+            sizes = [];
+        }
     } catch (error) {
         console.error("Failed to parse sizes JSON:", error);
+        sizes = [];
     }
+    
+  //  console.log("Parsed sizes:", sizes); // Debugging: Log the parsed sizes
+    
 
     return (
         <>
@@ -123,8 +136,8 @@ export const MenuItemCard: FC<Props> = ({ item, language }) => {
                             {/* Sizes and Prices */}
                             {Array.isArray(sizes) && sizes.length > 0 && (
                                 <Text color="red" size="sm">
-                                    {sizes.map((size: { size: string; price: string }) => (
-                                        <span key={`${size.size}-${size.price}`}>
+                                    {sizes.map((size: { id: string; size: string; price: string }) => (
+                                        <span key={size.id}>
                                             {size.size}: {size.price}{" "}
                                         </span>
                                     ))}
